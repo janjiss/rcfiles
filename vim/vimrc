@@ -2,7 +2,7 @@ set nocompatible " be iMproved
 
 " For vundle
 filetype off
-set rtp+=~/rcfiles/vim/bundle/vundle/
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#rc()
 
 " Dependencies of snipmate
@@ -10,8 +10,6 @@ Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
 Bundle "honza/vim-snippets"
 
-" Good looking bottom :)
-Bundle 'bling/vim-airline'
 " Git tools
 Bundle 'tpope/vim-fugitive'
 " Dependency managment
@@ -22,8 +20,6 @@ Bundle 'tpope/vim-rails.git'
 Bundle 'garbas/vim-snipmate'
 " Commenting and uncommenting stuff
 Bundle 'tomtom/tcomment_vim'
-" Beutiful solarized theme
-Bundle 'altercation/vim-colors-solarized'
 " Molokai theme
 Bundle 'tomasr/molokai'
 " Vim Ruby
@@ -34,24 +30,18 @@ Bundle 'tpope/vim-surround'
 Bundle 'jiangmiao/auto-pairs'
 " Tab completions
 Bundle 'ervandew/supertab'
-" CoffeeScript syntax
-Bundle 'kchmck/vim-coffee-script'
-" Fuzzu finder for vim (CTRL+P)
+" Fuzzy finder for vim (CTRL+P)
 Bundle 'kien/ctrlp.vim'
-" Ruby Tests
-Bundle 'skalnik/vim-vroom'
-" Easy motion for easy motion
-Bundle 'Lokaltog/vim-easymotion'
-" Running tests in tmux session
+" For tests
+Bundle 'janko-m/vim-test'
+" Navigation tree
+Bundle 'scrooloose/nerdtree'
+" Dispatching the test runner to tmux pane
 Bundle 'tpope/vim-dispatch'
-" Gist
-Bundle 'mattn/webapi-vim'
-Bundle 'mattn/gist-vim'
-Bundle 'danro/rename.vim'
 
-Bundle 'nono/vim-handlebars'
+Bundle 'plasticboy/vim-markdown'
 
-set grepprg=ack-grep " Set ACK as a default grep
+
 set tags=./tags; " Set tags directory
 set autoindent " Auto indention should be on
 
@@ -88,6 +78,9 @@ colorscheme molokai
 " Lovely linenumbers
 set nu
 
+" My leader key
+let mapleader=","
+
 " Searching
 set hlsearch
 set incsearch
@@ -101,21 +94,15 @@ map <leader>p :bp<CR> " \p previous buffer
 map <leader>n :bn<CR> " \n next buffer
 map <leader>d :bd<CR> " \d delete buffer
 
-let g:vroom_map_keys = 0
-let g:vroom_use_dispatch = 1
-let g:vroom_use_zeus = 1
-
-map <Leader>c :call vroom#RunTestFile()<CR>
-map <Leader>s :call vroom#RunNearestTest()<CR>
+map <Leader>c :call <CR>
+nmap <silent> <leader>c :TestFile<CR>
+nmap <silent> <leader>s :TestNearest<CR>
 map <leader>t :A<CR> " \t to jump to test file
 map <leader>r :r<cr> " \t to jump to related file
-map <leader>E :Explore .<cr> " \E to open file explorer in root
-map <leader>e :Explore<cr> " \e to open file explorer in current dir
 
-let g:airline_theme='luna'
-let g:airline_powerline_fonts=1
 set laststatus=2
 
+" Don't be a noob, join the no arrows key movement
 inoremap  <Up>     <NOP>
 inoremap  <Down>   <NOP>
 inoremap  <Left>   <NOP>
@@ -179,9 +166,16 @@ if exists("+undofile")
 endif
 
 " Ruby hash syntax conversion
-noremap <F12>
 nnoremap <F12> :%s/:\([^ ]*\)\(\s*\)=>/\1:/g<return>
 
-" Increment numbers
-nnoremap <A-a> <C-a>
-nnoremap <A-x> <C-x>
+nmap <Leader><CR> :nohlsearch<cr>
+
+map <leader>q :NERDTreeToggle<CR>
+
+set clipboard=unnamed
+
+if has('nvim')
+  let test#strategy = "neovim"
+else
+  let test#strategy = "dispatch"
+endif
